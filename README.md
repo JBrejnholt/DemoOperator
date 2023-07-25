@@ -1,3 +1,5 @@
+# Demo .Net Kubernetes Operator
+Demo k8s operator built based on [dotnet-operator-sdk](https://github.com/buehler/dotnet-operator-sdk/tree/master).
 
 ## Prerequisite
 
