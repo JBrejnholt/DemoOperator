@@ -1,10 +1,26 @@
-Prerequisites:
-1. dotnet 6.0 sdk
 
+## Prerequisite
+
+1. dotnet 6.0 sdk
+2. vs code
+3. have a local Kubernetes cluster running (k8s or k3s)
+
+## Set up KubeOps .Net Operator
+
+### Get KubeOps Template
+```
+dotnet new install KubeOps.Templates::7.4.2
+```
+
+### New up Opearator
 
 ```
+dotnet new operator -n DemoOperator
 dotnet build DemoOperator.csproj # did it twice to get it working
-dotnet bin/Debug/net6.0/DemoOperator.dll
+```
+
+### Install the CRD in the cluster
+```
 dotnet run install
 
 info: ApplicationStartup[0]
@@ -16,7 +32,13 @@ Starting install into cluster with url "https://127.0.0.1:6443/".
 Install "demo.kubeops.dev/DemoEntity" into the cluster
 ```
 
-created crd.yaml:
+### Run the operator
+```
+dotnet bin/Debug/net6.0/DemoOperator.dll
+```
+
+### Create the Custom Resource
+
 ```
 apiVersion: demo.kubeops.dev/v1
 kind: DemoEntity
