@@ -1,0 +1,7 @@
+apiVersion: demo.kubeops.dev/v1
+kind: DemoEntity
+metadata:
+  name: jinb-demo
+  namespace: default
+spec:
+  username: jinb
