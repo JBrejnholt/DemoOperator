@@ -35,7 +35,15 @@ public class DemoController : IResourceController<V1DemoEntity>
             cm = new V1ConfigMap {
                Metadata = new V1ObjectMeta {
                 Name = _cmName,
-                NamespaceProperty = ns
+                NamespaceProperty = ns,
+                OwnerReferences = new List<V1OwnerReference> {
+                    new V1OwnerReference {
+                        ApiVersion = entity.ApiVersion,
+                        Kind = entity.Kind,
+                        Name = entity.Name(),
+                        Uid = entity.Uid()
+                    }
+                }
                },
 
                Data = new Dictionary<string, string> {
