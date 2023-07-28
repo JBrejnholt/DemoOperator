@@ -3,9 +3,9 @@ Demo k8s operator built based on [dotnet-operator-sdk](https://github.com/buehle
 
 ## Prerequisite
 
-1. dotnet 6.0 sdk
+1. dotnet 6.0 and 7.0 sdk
 2. vs code
-3. have a local Kubernetes cluster running (k8s or k3s)
+3. have a local Kubernetes cluster running (k8s or k3s) with admin access
 
 ## Set up KubeOps .Net Operator
 
@@ -18,7 +18,7 @@ dotnet new install KubeOps.Templates::7.4.2
 
 ```
 dotnet new operator -n DemoOperator
-dotnet build DemoOperator.csproj # did it twice to get it working
+dotnet build DemoOperator.csproj # do it twice if there is a missing folder error
 ```
 
 ### Install the CRD in the cluster
