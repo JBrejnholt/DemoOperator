@@ -12,11 +12,10 @@ namespace DemoOperator.Controller;
 [EntityRbac(typeof(V1DemoEntity), Verbs = RbacVerb.All)]
 public class DemoController : IResourceController<V1DemoEntity>
 {
+    private const string ConfigMapName = "demo";
     private readonly IKubernetesClient _client;
     private readonly ILogger<DemoController> _logger;
     private readonly IFinalizerManager<V1DemoEntity> _finalizerManager;
-
-    private readonly string _cmName = "demo";
 
     public DemoController(IKubernetesClient client, ILogger<DemoController> logger, IFinalizerManager<V1DemoEntity> finalizerManager)
     {
@@ -30,11 +29,11 @@ public class DemoController : IResourceController<V1DemoEntity>
         _logger.LogInformation($"entity {entity.Name()} called {nameof(ReconcileAsync)}.");
         var ns = entity.Namespace();
         
-        var cm = await _client.Get<V1ConfigMap>(_cmName, ns);
+        var cm = await _client.Get<V1ConfigMap>(ConfigMapName, ns);
         if (cm == null) {
             cm = new V1ConfigMap {
                Metadata = new V1ObjectMeta {
-                Name = _cmName,
+                Name = ConfigMapName,
                 NamespaceProperty = ns,
                 OwnerReferences = new List<V1OwnerReference> {
                     new V1OwnerReference {
