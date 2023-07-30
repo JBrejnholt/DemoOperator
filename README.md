@@ -64,7 +64,7 @@ ReconcileAsync in our DemoController is the method to inject changes you want to
 
 ![Target Design](target.png)
 
-What we want is to have a ConfigMap created for each custom resource instance, the ConfigMap should have the same property 'username' and value as the custom resource instance. 
+What we want is to have a ConfigMap created for each custom resource instance, the ConfigMap should have the same property 'username' and value as the custom resource instance at all time. When the custom resource instance gets deleted, the ConfigMap should be deleted too.
 
 ### Add Kubernetes Client
 
