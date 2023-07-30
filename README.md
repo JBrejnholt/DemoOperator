@@ -60,6 +60,14 @@ the process of doing so is called reconciling.
 
 ReconcileAsync in our DemoController is the method to inject changes you want to perform when the custom resource is been reconciled.
 
+### Target Design
+
+![Target Design](target.png)
+
+What we want is to have a ConfigMap created for each custom resource instance, the ConfigMap should have the same property 'username' and value as the custom resource instance. 
+
+### Add Kubernetes Client
+
 Let's begin with creating a new ConfigMap when a custom resource is been reconciled, and update the ConfigMap when the custom resource's username property is updated.
 
 First of all, add the Kubernetes Client to the DemoController:
@@ -75,6 +83,7 @@ First of all, add the Kubernetes Client to the DemoController:
     }
 ```
 
+### Update Reconcile
 Now extend the ReconcileAsync method to create the configmap (if there is no such configmap found in the namespace) for the custom resource, with the username property from the custom resource as the configmap Data: 
 
 ```
@@ -142,6 +151,7 @@ cm = new V1ConfigMap {
             };
 ```
 
+### Full Test
 Now we can test the whole set up with the following steps:
 
 - rebuild and run the operator
