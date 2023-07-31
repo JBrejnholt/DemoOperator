@@ -15,6 +15,7 @@ public class DemoController : IResourceController<V1DemoEntity>
     private readonly IKubernetesClient _client;
     private readonly ILogger<DemoController> _logger;
     private readonly IFinalizerManager<V1DemoEntity> _finalizerManager;
+    private const string UsernameKey = "username";
 
     public DemoController(IKubernetesClient client, ILogger<DemoController> logger, IFinalizerManager<V1DemoEntity> finalizerManager)
     {
@@ -28,7 +29,8 @@ public class DemoController : IResourceController<V1DemoEntity>
         _logger.LogInformation($"entity {entity.Name()} called {nameof(ReconcileAsync)}.");
         var ns = entity.Namespace();
         var cmName = entity.Name() + "-configmap";
-        
+        string username = entity.Spec.Username.ToString();
+
         var cm = await _client.Get<V1ConfigMap>(cmName, ns);
         if (cm == null) {
             cm = new V1ConfigMap {
@@ -46,15 +48,23 @@ public class DemoController : IResourceController<V1DemoEntity>
                },
 
                Data = new Dictionary<string, string> {
-                { "username", entity.Spec.Username.ToString() }
+                { UsernameKey, username }
                }
             };
 
             await _client.Create(cm);
+            _logger.LogInformation($"created configmap {cmName} for entity {entity.Name()}.");
         }
         else {
-            cm.Data["username"] = entity.Spec.Username.ToString();
-            await _client.Update(cm);
+            if (cm.Data[UsernameKey] != username) {
+                _logger.LogInformation($"updating configmap {cmName} and entity status for entity {entity.Name()}.");               
+
+                cm.Data[UsernameKey] = username;
+                await _client.Update(cm);
+
+                entity.Status.DemoStatus = "updated";
+                await _client.UpdateStatus(entity);
+            }
         }
 
         await _finalizerManager.RegisterFinalizerAsync<DemoFinalizer>(entity);
